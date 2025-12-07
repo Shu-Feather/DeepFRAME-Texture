@@ -140,8 +140,7 @@ I_{t+1} = I_t +
 \frac{\varepsilon^2}{2}
 \left(
 \frac{\partial f(I_t; w)}{\partial I} - \frac{I_t}{\sigma^2}
-\right)
-+ \varepsilon Z_t
+\right) + \varepsilon Z_t
 \quad
 Z_t \sim \mathcal{N}(0, I)
 $$
