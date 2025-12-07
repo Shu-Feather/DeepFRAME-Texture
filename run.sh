@@ -1,0 +1,1 @@
+nohup python -u run_all_experiments.py > run_all.log 2>&1 &
