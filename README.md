@@ -113,11 +113,7 @@ The gradient of the log-likelihood (Eq. (4) in the handout) is approximated by
 $$
 \frac{\partial L}{\partial w}
 \approx
-\frac{\partial f(I_{\text{tgt}}; w)}{\partial w}
-
--
-
-\frac{\partial f(I_{\text{syn}}; w)}{\partial w}
+\frac{\partial f(I_{\text{tgt}}; w)}{\partial w} - \frac{\partial f(I_{\text{syn}}; w)}{\partial w}
 $$
 
 where ( I_{\text{syn}} ) is a synthesized image sampled from the current model via Langevin dynamics.
@@ -143,8 +139,7 @@ $$
 I_{t+1} = I_t +
 \frac{\varepsilon^2}{2}
 \left(
-\frac{\partial f(I_t; w)}{\partial I}
-- \frac{I_t}{\sigma^2}
+\frac{\partial f(I_t; w)}{\partial I} - \frac{I_t}{\sigma^2}
 \right)
 + \varepsilon Z_t
 \quad
