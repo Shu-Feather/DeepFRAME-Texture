@@ -4,7 +4,7 @@ This repository contains the codes on **hierarchical FRAME models** (Deep FRAME)
 
 Given a single target image that represents a texture (e.g. bark, coffee beans, water), we learn a probabilistic model of the image statistics using a CNN-based descriptor and synthesize new images by **Langevin dynamics** sampling.
 
-For more instructions, you can view the `proj4.pdf` in detail.
+For more instructions, please turn to `proj4.pdf` in detail.
 
 ---
 
@@ -40,7 +40,7 @@ Each experiment folder contains:
 * `target.png` – resized training image used by the model;
 * `XXXX.png` – synthesized images at intermediate training epochs;
 * `conv1.png` – visualization of the first-layer filters after training;
-* `output.log` – training log (values of (f_{\text{tgt}}, f_{\text{syn}}, f_{\text{diff}}) over epochs).
+* `output.log` – training log (values of ( f_{\text{tgt}}, f_{\text{syn}}, f_{\text{diff}} ) over epochs).
 
 ---
 
@@ -81,7 +81,7 @@ GPU is recommended but the code falls back to CPU automatically if CUDA is not a
 
 ### 3.1 Descriptor network
 
-The **descriptor** is a small CNN that plays the role of hierarchical filters (F_k^{(l)}).
+The **descriptor** is a small CNN that plays the role of hierarchical filters ( F_k^{(l)} ).
 It is defined in `deep_frame.py` as the `Descriptor` class:
 
 * `layer = 1`: only `conv1` (3 → 128 channels, 15×15 kernel + ReLU)
@@ -89,34 +89,38 @@ It is defined in `deep_frame.py` as the `Descriptor` class:
 * `layer = 3`: `conv1` + `conv2` + `conv3` (64 → 32 channels, 3×3 kernel + ReLU)
 
 The last feature map is summed over all channels and spatial locations to give the **scoring function**
-( f(I; w) ), i.e.
+( f(I; w) ). That is,
 
-[
-f(I; w) = \sum_{k,x} [F_k^{(L)} * I](x).
-]
+$$
+f(I; w) = \sum_{k,x} [F_k^{(L)} * I](x)
+$$
 
 ### 3.2 FRAME distribution
 
 The FRAME model defines a probability distribution over images:
 
-[
-p(I; w) \propto \exp(f(I; w)),q(I),
-]
+$$
+p(I; w) \propto \exp\big(f(I; w)\big) q(I)
+$$
 
-where (q(I)) is a Gaussian white noise model.
+where ( q(I) ) is a Gaussian white-noise reference model.
 
 ### 3.3 Learning
 
-Given a single target image (I_{\text{tgt}}), the objective is maximum likelihood.
+Given a single target image ( I_{\text{tgt}} ), the objective is maximum likelihood.
 The gradient of the log-likelihood (Eq. (4) in the handout) is approximated by
 
-[
+$$
 \frac{\partial L}{\partial w}
-\approx \frac{\partial f(I_{\text{tgt}}; w)}{\partial w}
-- \frac{\partial f(I_{\text{syn}}; w)}{\partial w},
-]
+\approx
+\frac{\partial f(I_{\text{tgt}}; w)}{\partial w}
 
-where (I_{\text{syn}}) is a synthesized image sampled from the current model via Langevin dynamics.
+-
+
+\frac{\partial f(I_{\text{syn}}; w)}{\partial w}
+$$
+
+where ( I_{\text{syn}} ) is a synthesized image sampled from the current model via Langevin dynamics.
 
 In code, this becomes:
 
@@ -133,17 +137,19 @@ f_diff.backward()            # autograd gives gradients w.r.t. model parameters
 
 ### 3.4 Langevin dynamics for sampling
 
-Samples from (p(I; w)) are drawn by **Langevin dynamics** (Eq. (5)):
+Samples from ( p(I; w) ) are drawn by **Langevin dynamics** (Eq. (5)):
 
-[
+$$
 I_{t+1} = I_t +
-\frac{\epsilon^2}{2}\left(
+\frac{\varepsilon^2}{2}
+\left(
 \frac{\partial f(I_t; w)}{\partial I}
 - \frac{I_t}{\sigma^2}
 \right)
-+ \epsilon Z_t,
-\quad Z_t \sim \mathcal{N}(0, I).
-]
++ \varepsilon Z_t
+\quad
+Z_t \sim \mathcal{N}(0, I)
+$$
 
 In `deep_frame.py` this is implemented in the `langevin()` function:
 
@@ -209,7 +215,7 @@ The script:
 2. Creates the full experiment list:
 
    ```text
-   TAGS = [bark, beehive, coffee, rose, stucco, water]
+   TAGS   = [bark, beehive, coffee, rose, stucco, water]
    LAYERS = [1, 2, 3]
    ```
 
@@ -267,7 +273,7 @@ Typical steps for the lab report:
 
    * how texture statistics are captured at different depths;
    * how global structure vs. fine details are modeled.
-4. Optionally, plot `f_tgt`, `f_syn`, and `f_diff` from `output.log` to illustrate training dynamics.
+4. Optionally, plot ( f_{\text{tgt}} ), ( f_{\text{syn}} ), and ( f_{\text{diff}} ) from `output.log` to illustrate training dynamics.
 
 ---
 
